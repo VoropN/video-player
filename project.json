@@ -1,0 +1,18 @@
+{
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "nx serve frontend --open"
+          },
+          {
+            "command": "nx serve backend"
+          }
+        ],
+        "parallel": true
+      }
+    }
+  }
+}

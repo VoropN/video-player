@@ -1,0 +1,16 @@
+.app-container {
+  display: flex;
+  gap: 1rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  app-video-player {
+    flex: 2;
+  }
+
+  app-playlist {
+    flex: 1;
+    max-width: 320px;
+  }
+}

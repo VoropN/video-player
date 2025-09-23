@@ -1,0 +1,37 @@
+<div class="video-player-container" *ngIf="currentVideoUrl; else noVideo">
+  <video
+    #videoElement
+    [src]="currentVideoUrl"
+    (timeupdate)="onTimeUpdate()"
+    (ended)="onEnded()"
+    (loadedmetadata)="onLoadedMetadata()"
+    controls
+    preload="metadata"
+    playsinline
+    crossorigin="anonymous"
+  ></video>
+
+  <div class="controls">
+    <button (click)="prevVideo()" [disabled]="currentIndex === 0">Prev</button>
+    <button
+      (click)="nextVideo()"
+      [disabled]="currentIndex >= playlist.length - 1"
+    >
+      Next
+    </button>
+
+    <label for="speed-select">Speed:</label>
+    <select
+      id="speed-select"
+      [(ngModel)]="playbackSpeed"
+      (change)="setPlaybackSpeed($event)"
+    >
+      >
+      <option *ngFor="let s of validSpeeds" [value]="s">{{ s }}x</option>
+    </select>
+  </div>
+</div>
+
+<ng-template #noVideo>
+  <p>No video selected or playlist is empty.</p>
+</ng-template>

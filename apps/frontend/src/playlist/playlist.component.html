@@ -1,0 +1,29 @@
+<div class="playlist-container" role="list" aria-label="Video playlist">
+  <h3>Playlist</h3>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <ul *ngIf="!error">
+    <li
+      *ngFor="let video of playlist; let i = index"
+      [class.active]="i === currentIndex"
+      (click)="selectVideoIndex(i)"
+      #videoItem
+      tabindex="0"
+      role="listitem"
+      aria-current="{{ i === currentIndex ? 'true' : 'false' }}"
+      aria-pressed="{{ i === currentIndex }}"
+    >
+      <div class="title">{{ video.title }}</div>
+      <div class="progress-bar" aria-label="Video progress">
+        <div class="progress-fill" [style.width.%]="video.progress"></div>
+      </div>
+      <div
+        *ngIf="video.watched"
+        class="watched-icon"
+        title="Watched"
+        aria-label="Watched"
+      >
+        ✔
+      </div>
+    </li>
+  </ul>
+</div>
