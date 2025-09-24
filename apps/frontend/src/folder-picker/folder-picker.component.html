@@ -1,4 +1,4 @@
 <button class="upload-label" (click)="openFolderDialog()">
   📁 Choose Folder
 </button>
-{{ folderPath }}
+{{ folderPath$ | async }}

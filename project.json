@@ -5,7 +5,7 @@
       "options": {
         "commands": [
           {
-            "command": "nx build frontend --watch"
+            "command": "nx build frontend --watch --configuration development"
           },
           {
             "command": "nx s electron"

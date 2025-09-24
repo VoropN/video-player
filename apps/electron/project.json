@@ -83,7 +83,7 @@
             "command": "nx build electron --watch --configuration development"
           },
           {
-            "command": "npx nodemon --watch dist/electron --delay 5000ms --exec  \"electron dist/electron/main.js\""
+            "command": "npx nodemon --watch dist/electron --watch dist/frontend --delay 5000ms --exec  \"electron dist/electron/main.js\""
           }
         ],
         "parallel": true

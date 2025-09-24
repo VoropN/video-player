@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -20,7 +21,16 @@ const PLAYBACK_SPEED_KEY = 'video-playback-speed';
   styleUrls: ['./video-player.component.scss'],
 })
 export class VideoPlayerComponent implements OnInit, OnDestroy {
-  @ViewChild('videoElement') videoRef!: ElementRef<HTMLVideoElement>;
+  private readonly playlistService = inject(PlaylistService);
+
+  @ViewChild('videoElement')
+  private _videoRef!: ElementRef<HTMLVideoElement>;
+  public get videoRef(): ElementRef<HTMLVideoElement> {
+    return this._videoRef;
+  }
+  public set videoRef(value: ElementRef<HTMLVideoElement>) {
+    this._videoRef = value;
+  }
 
   playlist: PlaylistItem[] = [];
   currentIndex = 0;
@@ -31,8 +41,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   private shouldSeekOnLoad = false;
   private pendingSeekTime: number | null = null;
   validSpeeds = [0.5, 1, 1.25, 1.5, 2];
-
-  constructor(private playlistService: PlaylistService) {}
 
   ngOnInit() {
     const savedSpeed = localStorage.getItem(PLAYBACK_SPEED_KEY);

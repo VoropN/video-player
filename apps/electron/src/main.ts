@@ -24,60 +24,53 @@ app.on('activate', () => {
     return;
   }
   createWindow();
-  mainWindow.on('closed', () => {
-    mainWindow = null; // Clean up when window is closed
-  });
 });
 
 function createWindow() {
-  const indexPath =
-    process.env.NODE_ENV === 'development'
-      ? createWindowForDev()
-      : createWindowForProd();
+  const { preload, index } = getWindowConfig();
 
-  mainWindow.loadURL(`file://${indexPath}`);
-}
-
-function createWindowForDev() {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     webPreferences: {
       nodeIntegration: false, // For security, disable node integration
       contextIsolation: true, // Isolate context for security
-      preload: path.join(__dirname, 'preload.js'), // Preload script
+      preload, // Preload script
     },
   });
 
-  return path.join(
-    __dirname,
-    '../../../../../',
-    'dist/frontend/browser/index.html'
-  );
+  mainWindow.loadURL(`file://${index}`);
+  mainWindow.on('closed', () => {
+    mainWindow = null; // Clean up when window is closed
+  });
 }
 
-function createWindowForProd() {
-  mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 800,
-    webPreferences: {
-      nodeIntegration: false, // For security, disable node integration
-      contextIsolation: true, // Isolate context for security
-      preload: path.join(
-        process.resourcesPath,
-        'app.asar',
-        'dist/electron/apps/electron/src',
-        'preload.js'
+function getWindowConfig() {
+  if (process.env.NODE_ENV === 'development') {
+    return {
+      preload: path.join(__dirname, 'preload.js'),
+      index: path.join(
+        __dirname,
+        '../../../../../',
+        'dist/frontend/browser/index.html'
       ),
-    },
-  });
+    };
+  }
 
-  return path.join(
-    process.resourcesPath,
-    'app.asar',
-    'dist',
-    'frontend',
-    'browser',
-    'index.html'
-  );
+  return {
+    preload: path.join(
+      process.resourcesPath,
+      'app.asar',
+      'dist/electron/apps/electron/src',
+      'preload.js'
+    ),
+    index: path.join(
+      process.resourcesPath,
+      'app.asar',
+      'dist',
+      'frontend',
+      'browser',
+      'index.html'
+    ),
+  };
 }

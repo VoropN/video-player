@@ -24,7 +24,7 @@ export class App implements OnInit {
     this.playlistService.loadVideos();
   }
 
-  onFolderUpdated(): void {
+  protected onFolderUpdated(): void {
     this.playlistService.loadVideos();
   }
 }

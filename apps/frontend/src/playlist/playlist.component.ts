@@ -37,7 +37,6 @@ export class PlaylistComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-
     this.playlistService.currentIndex$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((index) => {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { VideoItem, VideoService } from '../video.service';
 
@@ -10,32 +10,28 @@ export interface PlaylistItem {
   progress: number; // percent (0–100)
 }
 
+const PROGRESS_KEY = 'playlist-progress';
+const INDEX_KEY = 'playlist-current-index';
+
 @Injectable({ providedIn: 'root' })
 export class PlaylistService {
-  private playlistSubject = new BehaviorSubject<PlaylistItem[]>([]);
-  private currentIndexSubject = new BehaviorSubject<number>(0);
-  private refreshSubject = new BehaviorSubject<void>(undefined);
+  private readonly videoService = inject(VideoService);
+  private readonly playlistSubject = new BehaviorSubject<PlaylistItem[]>([]);
+  private readonly currentIndexSubject = new BehaviorSubject<number>(0);
+  private readonly refreshSubject = new BehaviorSubject<void>(undefined);
 
   playlist$ = this.playlistSubject.asObservable();
   currentIndex$ = this.currentIndexSubject.asObservable();
   refresh$ = this.refreshSubject.asObservable();
 
-  private PROGRESS_KEY = 'playlist-progress';
-  private INDEX_KEY = 'playlist-current-index';
-
-  constructor(private videoService: VideoService) {}
-
-  /**
-   * Loads videos from backend and sets playlist
-   */
-  loadVideos(): void {
-    this.videoService.getVideos().subscribe({
-      next: (items) => this.setPlaylistFromItems(items),
-      error: (err) => {
-        console.error('Failed to load videos:', err);
-        this.playlistSubject.next([]);
-      },
-    });
+  async loadVideos() {
+    try {
+      const items = await this.videoService.getVideos();
+      this.setPlaylistFromItems(items);
+    } catch (err) {
+      console.error('Failed to load videos:', err);
+      this.playlistSubject.next([]);
+    }
   }
 
   setPlaylistFromItems(items: VideoItem[]): void {
@@ -66,7 +62,7 @@ export class PlaylistService {
   setCurrentIndex(index: number): void {
     const current = this.currentIndexSubject.getValue();
     this.currentIndexSubject.next(index);
-    localStorage.setItem(this.INDEX_KEY, index.toString());
+    localStorage.setItem(INDEX_KEY, index.toString());
 
     if (index === current) {
       this.refreshSubject.next(); // re-trigger seek if same video clicked
@@ -87,12 +83,12 @@ export class PlaylistService {
   }
 
   private saveProgressToStorage(items: PlaylistItem[], folder: string): void {
-    localStorage.setItem(this.PROGRESS_KEY + folder, JSON.stringify(items));
+    localStorage.setItem(PROGRESS_KEY + folder, JSON.stringify(items));
   }
 
   private loadProgressFromStorage(folder: string): PlaylistItem[] {
     try {
-      const raw = localStorage.getItem(this.PROGRESS_KEY + folder);
+      const raw = localStorage.getItem(PROGRESS_KEY + folder);
       return raw ? JSON.parse(raw) : [];
     } catch {
       return [];
@@ -100,7 +96,7 @@ export class PlaylistService {
   }
 
   private loadCurrentIndexFromStorage(): number {
-    const raw = localStorage.getItem(this.INDEX_KEY);
+    const raw = localStorage.getItem(INDEX_KEY);
     const parsed = parseInt(raw || '0', 10);
     return isNaN(parsed) ? 0 : parsed;
   }

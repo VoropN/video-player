@@ -16,7 +16,7 @@ declare global {
   interface Window {
     electron: {
       getFolders: () => Promise<FolderConfig>;
-      setFolder: () => Promise<{ message: string; current: string }>;
+      setFolder: () => Promise<string>;
       getVideos: () => Promise<VideoItem[]>;
       getVideoFile: (filename: string) => Promise<string>;
     };
@@ -25,16 +25,16 @@ declare global {
 
 @Injectable({ providedIn: 'root' })
 export class VideoService {
-  protected getFolders() {
-    return window.electron.getFolders();
+  getFolders() {
+    return from(window.electron.getFolders());
   }
 
   setFolder() {
-    return window.electron.setFolder();
+    return from(window.electron.setFolder());
   }
 
-  getVideos(): Observable<VideoItem[]> {
-    return from(window.electron.getVideos());
+  getVideos() {
+    return window.electron.getVideos();
   }
 
   getVideoFile(filename: string): Observable<string> {
