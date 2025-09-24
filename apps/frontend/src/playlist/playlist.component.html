@@ -1,9 +1,11 @@
 <div class="playlist-container" role="list" aria-label="Video playlist">
   <h3>Playlist</h3>
-  <div *ngIf="error" class="error">{{ error }}</div>
-  <ul *ngIf="!error">
+  @if(error) {
+  <div class="error">{{ error }}</div>
+  } @else {
+  <ul>
+    @for(video of playlist$ | async; track video.id; let i = $index) {
     <li
-      *ngFor="let video of playlist; let i = index"
       [class.active]="i === currentIndex"
       (click)="selectVideoIndex(i)"
       #videoItem
@@ -25,5 +27,7 @@
         ✔
       </div>
     </li>
+    }
   </ul>
+  }
 </div>

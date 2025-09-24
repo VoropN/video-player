@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { VideoItem } from './video.service';
+import { VideoItem, VideoService } from '../video.service';
 
 export interface PlaylistItem {
   id: string;
@@ -23,13 +23,31 @@ export class PlaylistService {
   private PROGRESS_KEY = 'playlist-progress';
   private INDEX_KEY = 'playlist-current-index';
 
+  constructor(private videoService: VideoService) {}
+
+  /**
+   * Loads videos from backend and sets playlist
+   */
+  loadVideos(): void {
+    this.videoService.getVideos().subscribe({
+      next: (items) => this.setPlaylistFromItems(items),
+      error: (err) => {
+        console.error('Failed to load videos:', err);
+        this.playlistSubject.next([]);
+      },
+    });
+  }
+
   setPlaylistFromItems(items: VideoItem[]): void {
-    const savedProgress = this.loadProgressFromStorage();
+    const folder = this.getFolderFromItem(items[0]);
+    const savedProgress = new Map(
+      this.loadProgressFromStorage(folder).map((x) => [x.id, x])
+    );
     const savedIndex = this.loadCurrentIndexFromStorage();
 
-    const playlist: PlaylistItem[] = items.map((item, index) => {
-      const id = (index + 1).toString();
-      const saved = savedProgress[id];
+    const playlist: PlaylistItem[] = items.map((item) => {
+      const id = item.filePath;
+      const saved = savedProgress.get(id);
       return {
         id,
         title: item.title,
@@ -55,38 +73,29 @@ export class PlaylistService {
     }
   }
 
-  updateProgress(id: string, progress: number): void {
+  updateProgress(item: PlaylistItem, progress: number): void {
     const playlist = this.playlistSubject.getValue();
-    const idx = playlist.findIndex((item) => item.id === id);
-
-    if (idx !== -1) {
-      playlist[idx].progress = progress;
-      playlist[idx].watched = progress >= 95;
-      this.playlistSubject.next([...playlist]);
-      this.saveProgressToStorage(playlist);
-    }
+    item.progress = progress;
+    item.watched = progress >= 95;
+    const items = playlist.map((x) => (x.id === item.id ? item : x));
+    const folder = this.getFolderFromItem(item);
+    this.saveProgressToStorage(items, folder);
   }
 
-  private saveProgressToStorage(playlist: PlaylistItem[]): void {
-    const data: Record<string, { progress: number; watched: boolean }> = {};
-    playlist.forEach((item) => {
-      data[item.id] = {
-        progress: item.progress,
-        watched: item.watched,
-      };
-    });
-    localStorage.setItem(this.PROGRESS_KEY, JSON.stringify(data));
+  private getFolderFromItem(item: { id?: string; filePath?: string }): string {
+    return (item.id || item.filePath || '').split('/').slice(0, -1).join(''); // get parent folder name
   }
 
-  private loadProgressFromStorage(): Record<
-    string,
-    { progress: number; watched: boolean }
-  > {
+  private saveProgressToStorage(items: PlaylistItem[], folder: string): void {
+    localStorage.setItem(this.PROGRESS_KEY + folder, JSON.stringify(items));
+  }
+
+  private loadProgressFromStorage(folder: string): PlaylistItem[] {
     try {
-      const raw = localStorage.getItem(this.PROGRESS_KEY);
-      return raw ? JSON.parse(raw) : {};
+      const raw = localStorage.getItem(this.PROGRESS_KEY + folder);
+      return raw ? JSON.parse(raw) : [];
     } catch {
-      return {};
+      return [];
     }
   }
 

@@ -122,7 +122,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     const current = this.playlist[this.currentIndex];
     if (video && current) {
       const progressPercent = (video.currentTime / video.duration) * 100;
-      this.playlistService.updateProgress(current.id, progressPercent);
+      this.playlistService.updateProgress(current, progressPercent);
     }
   }
 

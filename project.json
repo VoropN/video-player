@@ -5,10 +5,10 @@
       "options": {
         "commands": [
           {
-            "command": "nx serve frontend --open"
+            "command": "nx build frontend --watch"
           },
           {
-            "command": "nx serve backend"
+            "command": "nx s electron"
           }
         ],
         "parallel": true

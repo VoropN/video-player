@@ -2,14 +2,15 @@ import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
   ElementRef,
+  inject,
   OnInit,
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { catchError, of, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PlaylistItem, PlaylistService } from './playlist.service';
-import { VideoService } from './video.service';
 
 @Component({
   selector: 'app-playlist',
@@ -19,61 +20,41 @@ import { VideoService } from './video.service';
   styleUrls: ['./playlist.component.scss'],
 })
 export class PlaylistComponent implements OnInit, AfterViewInit {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly playlistService = inject(PlaylistService);
+
   @ViewChildren('videoItem') videoItems!: QueryList<ElementRef>;
 
-  playlist: PlaylistItem[] = [];
-  currentIndex = 0;
-  error = '';
-  private sub?: Subscription;
-
-  constructor(
-    private playlistService: PlaylistService,
-    private videoService: VideoService
-  ) {}
+  protected playlist$ = this.playlistService.playlist$
+  protected currentIndex = 0;
+  protected error = '';
 
   ngAfterViewInit() {
-    // When the QueryList changes (e.g., DOM updates), scroll the selected item
-    this.sub = this.videoItems.changes.subscribe(() => this.scrollToCurrent());
-
-    // Initial scroll on first load
+    this.videoItems.changes
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.scrollToCurrent());
     this.scrollToCurrent();
   }
 
   ngOnInit() {
-    // Fetch raw URLs from backend
-    this.videoService
-      .getVideos()
-      .pipe(
-        catchError((err) => {
-          this.error = 'Failed to load playlist';
-          console.error(err);
-          return of([]);
-        })
-      )
-      .subscribe((urls) => {
-        this.playlistService.setPlaylistFromItems(urls);
+
+    this.playlistService.currentIndex$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((index) => {
+        this.currentIndex = index;
       });
-
-    // Subscribe to playlist & currentIndex from PlaylistService
-    this.playlistService.playlist$.subscribe((list) => {
-      this.playlist = list;
-    });
-
-    this.playlistService.currentIndex$.subscribe((index) => {
-      this.currentIndex = index;
-    });
   }
 
-  selectVideoIndex(index: number) {
+  protected selectVideoIndex(index: number) {
     this.playlistService.setCurrentIndex(index);
   }
 
-  selectVideo(index: number) {
+  protected selectVideo(index: number) {
     this.currentIndex = index;
     this.scrollToCurrent();
   }
 
-  scrollToCurrent() {
+  protected scrollToCurrent() {
     const items = this.videoItems.toArray();
     if (items[this.currentIndex]) {
       items[this.currentIndex].nativeElement.scrollIntoView({
@@ -81,9 +62,5 @@ export class PlaylistComponent implements OnInit, AfterViewInit {
         block: 'nearest',
       });
     }
-  }
-
-  ngOnDestroy() {
-    this.sub?.unsubscribe();
   }
 }

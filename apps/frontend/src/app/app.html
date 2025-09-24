@@ -1,4 +1,5 @@
 <div class="app-container">
-  <app-video-player></app-video-player>
-  <app-playlist></app-playlist>
+  <app-folder-picker class="toolbar" (folderSet)="onFolderUpdated()" />
+  <app-video-player />
+  <app-playlist />
 </div>
