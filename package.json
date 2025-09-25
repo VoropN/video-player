@@ -1,5 +1,5 @@
 {
-  "name": "Mplayer",
+  "name": "@mplayer/video",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -16,7 +16,6 @@
     "@angular/platform-browser": "~20.2.0",
     "@angular/platform-browser-dynamic": "~20.2.0",
     "@angular/router": "~20.2.0",
-    "express": "^4.21.2",
     "rxjs": "~7.8.0",
     "zone.js": "~0.15.0"
   },
@@ -68,8 +67,7 @@
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
     "typescript": "~5.9.2",
-    "typescript-eslint": "^8.40.0",
-    "wait-on": "^9.0.1"
+    "typescript-eslint": "^8.40.0"
   },
   "build": {
     "appId": "com.video.app",
