@@ -32,7 +32,7 @@ export class VideoPlayerComponent {
   @ViewChild('videoElement', { static: false })
   videoRef!: ElementRef<HTMLVideoElement>;
 
-  private get video(): HTMLVideoElement {
+  protected get video(): HTMLVideoElement {
     return this.videoRef.nativeElement;
   }
 
@@ -167,6 +167,6 @@ export class VideoPlayerComponent {
 
   private loadPlaybackSpeed(): number {
     const saved = parseFloat(localStorage.getItem(PLAYBACK_SPEED_KEY) ?? '1');
-    return saved > 0.5 ? saved : 2;
+    return saved > 0.5 ? saved : 1;
   }
 }

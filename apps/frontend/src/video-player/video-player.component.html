@@ -19,16 +19,18 @@
       (click)="prevVideo()"
       [disabled]="currentIndex() === 0"
     >
-      Prev
+      «
     </button>
     <button
       class="control-button"
       (click)="nextVideo()"
       [disabled]="currentIndex() >= playlist().length - 1"
     >
-      Next
+      »
     </button>
-    <button class="control-button stop-button" (click)="toggleVideo()"></button>
+    <button class="control-button stop-button" (click)="toggleVideo()">
+      {{ videoElement.paused ? '⏵' : '‖' }}
+    </button>
     <label class="playback-container" for="playback-range">
       <input
         type="range"
