@@ -1,11 +1,12 @@
 <div class="playlist-container" role="list" aria-label="Video playlist">
-  <h3>Playlist</h3>
+  <h3 class="playlist-title">Playlist</h3>
   @if(error) {
   <div class="error">{{ error }}</div>
   } @else {
-  <ul>
+  <ul class="playlist">
     @for(video of playlist$ | async; track video.id; let i = $index) {
     <li
+      class="playlist-item"
       [class.active]="i === currentIndex"
       (click)="selectVideoIndex(i)"
       #videoItem
@@ -18,13 +19,9 @@
       <div class="progress-bar" aria-label="Video progress">
         <div class="progress-fill" [style.width.%]="video.progress"></div>
       </div>
-      <div
-        *ngIf="video.watched"
-        class="watched-icon"
-        title="Watched"
-        aria-label="Watched"
-      >
-        ✔
+
+      <div class="watched-icon" title="Watched" aria-label="Watched">
+        @if (video.watched) {✔}
       </div>
     </li>
     }

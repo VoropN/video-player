@@ -1,13 +1,50 @@
+.upload-container {
+  white-space: nowrap;
+}
+
 .upload-label {
   display: inline-block;
-  padding: 10px 20px;
-  background-color: #007acc;
-  color: white;
-  border-radius: 4px;
+  padding: 0.5rem 2rem;
+  background-color: #222;
+  color: #eee;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  border: 2px solid #666;
+  border-radius: 6px;
+  box-shadow: 0 4px #444;
   cursor: pointer;
-  font-weight: bold;
+  user-select: none;
+  transition: all 0.2s ease;
+  text-align: center;
 
   &:hover {
-    background-color: #005a99;
+    background-color: #333;
+    border-color: #888;
   }
+
+  &:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px #222;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+  }
+}
+
+.folder-path {
+  display: inline-block;
+  margin-left: 1rem;
+  padding: 0.4rem 1rem;
+  color: #ccc;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  max-width: 50vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  user-select: text;
+  transition: background-color 0.2s;
 }

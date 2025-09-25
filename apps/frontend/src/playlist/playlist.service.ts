@@ -78,8 +78,8 @@ export class PlaylistService {
     this.saveProgressToStorage(items, folder);
   }
 
-  private getFolderFromItem(item: { id?: string; filePath?: string }): string {
-    return (item.id || item.filePath || '').split('/').slice(0, -1).join(''); // get parent folder name
+  private getFolderFromItem(item?: { id?: string; filePath?: string }): string {
+    return (item?.id || item?.filePath || '').split('/').slice(0, -1).join(''); // get parent folder name
   }
 
   private saveProgressToStorage(items: PlaylistItem[], folder: string): void {

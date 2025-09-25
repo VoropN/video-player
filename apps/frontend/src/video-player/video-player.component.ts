@@ -135,6 +135,12 @@ export class VideoPlayerComponent {
     }
   }
 
+  protected toggleFullScreen(): void {
+    this.video.requestFullscreen().catch((err) => {
+      console.error(`Error attempting to enable full-screen mode: ${err}`);
+    });
+  }
+
   private tryPlay(): void {
     if (this.currentVideo()) {
       this.video.play().catch((e) => console.warn('Playback error:', e));
@@ -149,7 +155,9 @@ export class VideoPlayerComponent {
 
   private seekToSavedProgress(): void {
     const current = this.currentVideo();
-    if (!current?.progress || !this.video.duration) return;
+    if (!current?.progress || !this.video.duration) {
+      return;
+    }
 
     const time = (current.progress / 100) * this.video.duration;
     if (!isNaN(time) && time > 0 && time < this.video.duration) {
@@ -159,6 +167,6 @@ export class VideoPlayerComponent {
 
   private loadPlaybackSpeed(): number {
     const saved = parseFloat(localStorage.getItem(PLAYBACK_SPEED_KEY) ?? '1');
-    return saved > 0.5 ? saved : 1;
+    return saved > 0.5 ? saved : 2;
   }
 }

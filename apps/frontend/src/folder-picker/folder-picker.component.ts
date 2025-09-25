@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { map, tap } from 'rxjs';
+import { map, withLatestFrom } from 'rxjs';
 import { PlaylistService } from '../playlist/playlist.service';
 import { VideoService } from '../video.service';
 
@@ -20,9 +20,15 @@ export class FolderPickerComponent {
     .pipe(map((f) => f.current));
 
   protected openFolderDialog() {
+    const previous$ = this.folderPath$;
     this.folderPath$ = this.videoService.setFolder().pipe(
-      tap((f) => {
-        this.playlistService.loadVideos();
+      withLatestFrom(previous$),
+      map(([folder, previos]) => {
+        if (folder) {
+          this.playlistService.loadVideos();
+          return folder;
+        }
+        return previos;
       })
     );
   }

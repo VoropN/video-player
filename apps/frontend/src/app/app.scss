@@ -1,7 +1,7 @@
 .app-container {
   background: #222;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr minmax(auto, 300px);
   grid-template-rows: auto 1fr;
   grid-template-areas:
     'header playlist'
@@ -24,6 +24,4 @@ app-video-player {
 
 app-playlist {
   grid-area: playlist;
-  color: #eee;
-  overflow-y: auto;
 }
