@@ -1,11 +1,13 @@
 .playlist-container {
   background: #222;
   padding: 1rem;
-  overflow-y: auto;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   h3 {
-    margin-top: 0;
+    margin-top: 14px;
     color: #eee;
     font-weight: 600;
   }
@@ -14,6 +16,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    overflow-y: auto;
 
     li {
       padding: 0.5rem 0.75rem;

@@ -1,27 +1,29 @@
 .app-container {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
   background: #222;
-}
-
-app-video-player {
-  height: 100%;
-}
-
-app-playlist {
-  height: 100%;
-  overflow-y: auto;
-  background: #f7f7f7;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'header playlist'
+    'video playlist';
+  height: 100vh;
 }
 
 .toolbar {
-  grid-column: 1 / -1;
-  padding: 8px;
-  background: #333;
-  color: #fff;
+  grid-area: header;
+  padding: 0.5rem;
+  color: white;
+}
+
+app-video-player {
+  grid-area: video;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+app-playlist {
+  grid-area: playlist;
+  color: #eee;
+  overflow-y: auto;
 }

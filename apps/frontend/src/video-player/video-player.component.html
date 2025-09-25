@@ -1,9 +1,11 @@
-<div class="video-player-container" *ngIf="currentVideoUrl; else noVideo">
+@if(currentVideo()) {
+<div class="video-player-container">
   <video
     #videoElement
-    [src]="currentVideoUrl"
+    class="video-player"
+    [src]="currentVideo().url"
     (timeupdate)="onTimeUpdate()"
-    (ended)="onEnded()"
+    (ended)="nextVideo()"
     (loadedmetadata)="onLoadedMetadata()"
     controls
     preload="metadata"
@@ -12,26 +14,36 @@
   ></video>
 
   <div class="controls">
-    <button (click)="prevVideo()" [disabled]="currentIndex === 0">Prev</button>
     <button
+      class="control-button"
+      (click)="prevVideo()"
+      [disabled]="currentIndex() === 0"
+    >
+      Prev
+    </button>
+    <button
+      class="control-button"
       (click)="nextVideo()"
-      [disabled]="currentIndex >= playlist.length - 1"
+      [disabled]="currentIndex() >= playlist().length - 1"
     >
       Next
     </button>
-
-    <label for="speed-select">Speed:</label>
-    <select
-      id="speed-select"
-      [(ngModel)]="playbackSpeed"
-      (change)="setPlaybackSpeed($event)"
-    >
-      >
-      <option *ngFor="let s of validSpeeds" [value]="s">{{ s }}x</option>
-    </select>
+    <button class="stop-button" (click)="toggleVideo()"></button>
+    <label class="playback-container" for="playback-range">
+      <input
+        type="range"
+        class="playback-range"
+        id="playback-range"
+        [min]="range.min"
+        [max]="range.max"
+        [step]="range.step"
+        [value]="playbackSpeed()"
+        (input)="setPlaybackSpeed($event)"
+      />
+      <span class="playback-label">{{ playbackSpeed() }}</span>
+    </label>
   </div>
 </div>
-
-<ng-template #noVideo>
-  <p>No video selected or playlist is empty.</p>
-</ng-template>
+} @else {
+<p>No video selected or playlist is empty.</p>
+}
