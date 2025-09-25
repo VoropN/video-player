@@ -32,7 +32,7 @@ export class VideoPlayerComponent {
   @ViewChild('videoElement', { static: false })
   videoRef!: ElementRef<HTMLVideoElement>;
 
-  protected get video(): HTMLVideoElement {
+  private get video(): HTMLVideoElement {
     return this.videoRef.nativeElement;
   }
 
