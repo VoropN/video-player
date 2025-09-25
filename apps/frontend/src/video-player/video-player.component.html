@@ -19,17 +19,17 @@
       (click)="prevVideo()"
       [disabled]="currentIndex() === 0"
     >
-      «
+      <span class="icon">⏮</span>
     </button>
     <button
       class="control-button"
       (click)="nextVideo()"
       [disabled]="currentIndex() >= playlist().length - 1"
     >
-      »
+      <span class="icon">⏭</span>
     </button>
     <button class="control-button stop-button" (click)="toggleVideo()">
-      {{ videoElement.paused ? '⏵' : '‖' }}
+      <span class="icon">{{ videoElement.paused ? '⏵' : '⏸' }}</span>
     </button>
     <label class="playback-container" for="playback-range">
       <input
@@ -49,7 +49,7 @@
       (click)="toggleFullScreen()"
       title="Toggle Fullscreen"
     >
-      ⛶
+      <span class="icon">⛶</span>
     </button>
   </div>
 </div>

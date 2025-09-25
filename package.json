@@ -1,5 +1,5 @@
 {
-  "name": "@video-workspace/source",
+  "name": "Mplayer",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -73,7 +73,7 @@
   },
   "build": {
     "appId": "com.video.app",
-    "productName": "Video App",
+    "productName": "Mplayer",
     "mac": {
       "target": [
         "dmg",
@@ -81,6 +81,12 @@
       ],
       "icon": "assets/icons/app-icon.icns",
       "category": "public.app-category.video"
+    },
+    "win": {
+      "icon": "assets/icons/icon.ico"
+    },
+    "linux": {
+      "icon": "assets/icons/icon.png"
     },
     "directories": {
       "output": "dist"

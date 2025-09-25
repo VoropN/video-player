@@ -5,6 +5,7 @@ import { setupHandlers } from './handlers';
 setupHandlers();
 
 let mainWindow: BrowserWindow;
+const appRoot = app.getAppPath();
 
 // Handle Electron's app lifecycle events
 app.whenReady().then(() => {
@@ -49,11 +50,7 @@ function getWindowConfig() {
   if (process.env.NODE_ENV === 'development') {
     return {
       preload: path.join(__dirname, 'preload.js'),
-      index: path.join(
-        __dirname,
-        '../../../../../',
-        'dist/frontend/browser/index.html'
-      ),
+      index: path.join(appRoot, '../frontend/browser/index.html'),
     };
   }
 
@@ -66,11 +63,7 @@ function getWindowConfig() {
     ),
     index: path.join(
       process.resourcesPath,
-      'app.asar',
-      'dist',
-      'frontend',
-      'browser',
-      'index.html'
+      'app.asar/dist/frontend/browser/index.html'
     ),
   };
 }
