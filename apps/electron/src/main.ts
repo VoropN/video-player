@@ -44,6 +44,16 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null; // Clean up when window is closed
   });
+
+  // Handle routing issue for file:// paths
+  mainWindow.webContents.on('will-navigate', (event, navigationUrl) => {
+    event.preventDefault();
+    mainWindow.loadFile(index);
+  });
+
+  mainWindow.webContents.on('did-fail-load', () => {
+    mainWindow.loadFile(index);
+  });
 }
 
 function getWindowConfig() {
