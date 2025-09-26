@@ -66,13 +66,12 @@
       }
 
       &.active {
-        background: #4caf50;
+        background: #777;
         color: #fff;
         font-weight: bold;
       }
 
       .title {
-        flex: 1;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -85,7 +84,6 @@
         border-radius: 4px;
         overflow: hidden;
         position: relative;
-        flex-shrink: 0;
 
         .progress-fill {
           height: 100%;
@@ -97,7 +95,7 @@
 
       .watched-icon {
         color: #4caf50;
-        flex-shrink: 0;
+        line-height: 1;
       }
     }
   }

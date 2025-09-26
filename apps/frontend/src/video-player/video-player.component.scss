@@ -10,7 +10,7 @@
     display: block;
     margin: 1rem auto;
     max-width: 100%;
-    max-height: calc(100% - 80px);
+    max-height: calc(100% - 115px);
     border-radius: 8px;
     background-color: #000;
 
@@ -90,6 +90,11 @@
       border-color: #555;
       cursor: not-allowed;
       box-shadow: none;
+      transform: translateY(2px);
+
+      .icon {
+        text-shadow: none;
+      }
     }
 
     .icon {
@@ -188,4 +193,12 @@
       border-radius: 4px;
     }
   }
+}
+
+.no-video {
+  color: #ccc;
+  font-family: 'Courier New', monospace;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 2rem;
 }
